@@ -166,6 +166,41 @@
     color: #c9a8ff;
   }
 
+  /* Stili per la scelta del copy */
+  .copy-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .radio-label {
+    cursor: pointer;
+  }
+
+  .radio-label input {
+    display: none; /* Nasconde il pallino del radio */
+  }
+
+  .radio-label span {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    color: #b0b0c8;
+    transition: all 0.2s ease;
+  }
+
+  .radio-label input:checked + span {
+    background: rgba(255, 210, 0, 0.15);
+    border-color: var(--yellow);
+    color: var(--yellow);
+    font-weight: 500;
+  }
+
   .msg-preview {
     background: rgba(255,255,255,.04);
     border: 1px solid rgba(255,255,255,.1);
@@ -257,6 +292,7 @@
   .fade-up:nth-child(7) { animation-delay: .7s; }
   .fade-up:nth-child(8) { animation-delay: .8s; }
   .fade-up:nth-child(9) { animation-delay: .9s; }
+  .fade-up:nth-child(10) { animation-delay: 1s; }
 </style>
 </head>
 <body>
@@ -291,22 +327,31 @@
 
   <hr class="divider">
 
-  <p class="section-label fade-up">Mail inviata a tutti questi studi in CCN</p>
+  <p class="section-label fade-up">Scegli il messaggio da inviare</p>
+  <div class="copy-selector fade-up">
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="1" checked>
+      <span>1. Appassionato (Originale)</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="2">
+      <span>2. Breve e d'Impatto</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="3">
+      <span>3. Formale e Analitico</span>
+    </label>
+  </div>
+
+  <p class="section-label fade-up" style="margin-top: 1.5rem;">Mail inviata a tutti questi studi in CCN</p>
   <div class="studios fade-up" id="studioList"></div>
 
   <div class="msg-preview fade-up">
     <div class="msg-label">Anteprima email</div>
     <p class="msg-meta">A: <span>te stesso (studi in CCN)</span></p>
     <p class="msg-meta">Oggetto: <span>Please Release The Amazing Digital Circus in Italian Cinemas</span></p>
-    <div class="msg-text">
-      Dear Team,<br><br>
-      I am an Italian fan of <em>The Amazing Digital Circus</em>, the acclaimed animated series by Gooseworx and Glitch Productions.<br><br>
-      I am writing to make a specific and heartfelt request: <span class="highlight">please release The Amazing Digital Circus as a theatrical feature film in Italy.</span> The Italian fanbase is passionate, large, and ready — we want to experience this world on the big screen, in our cinemas, in our country.<br><br>
-      Italy has a strong tradition of animation appreciation and a dedicated audience for this kind of bold, original storytelling. A theatrical release in Italy would be met with enormous enthusiasm.<br><br>
-      Please consider bringing this incredible show to Italian cinemas. You already have our full support.<br><br>
-      Thank you for your consideration.<br>
-      An Italian fan
-    </div>
+    <div class="msg-text" id="msgBodyPreview">
+      </div>
   </div>
 
   <div class="cta-wrap fade-up">
@@ -339,11 +384,37 @@
 
   const bcc = studios.map(s => s.email).join(',');
   const subj = encodeURIComponent('Please Release The Amazing Digital Circus in Italian Cinemas');
-  const body = encodeURIComponent(
-    `Dear Team,\n\nI am an Italian fan of The Amazing Digital Circus, the acclaimed animated series by Gooseworx and Glitch Productions.\n\nI am writing to make a specific and heartfelt request: please release The Amazing Digital Circus as a theatrical feature film in Italy. The Italian fanbase is passionate, large, and ready — we want to experience this world on the big screen, in our cinemas, in our country.\n\nItaly has a strong tradition of animation appreciation and a dedicated audience for this kind of bold, original storytelling. A theatrical release in Italy would be met with enormous enthusiasm.\n\nPlease consider bringing this incredible show to Italian cinemas. You already have our full support.\n\nThank you for your consideration.\nAn Italian fan`
-  );
 
-  document.getElementById('mailtoBtn').href = `mailto:?bcc=${bcc}&subject=${subj}&body=${body}`;
+  // I 3 testi disponibili
+  const emailTexts = {
+    "1": `Dear Team,\n\nI am an Italian fan of The Amazing Digital Circus, the acclaimed animated series by Gooseworx and Glitch Productions.\n\nI am writing to make a specific and heartfelt request: please release The Amazing Digital Circus as a theatrical feature film in Italy. The Italian fanbase is passionate, large, and ready — we want to experience this world on the big screen, in our cinemas, in our country.\n\nItaly has a strong tradition of animation appreciation and a dedicated audience for this kind of bold, original storytelling. A theatrical release in Italy would be met with enormous enthusiasm.\n\nPlease consider bringing this incredible show to Italian cinemas. You already have our full support.\n\nThank you for your consideration.\nAn Italian fan`,
+    
+    "2": `Dear Team,\n\nAs a huge Italian fan of The Amazing Digital Circus, I am writing to kindly ask you to bring this masterpiece to theaters in Italy!\n\nThe fanbase here is incredibly active and rapidly growing. Seeing the amazing animation and vibrant colors of Gooseworx and Glitch Productions on the big screen would be an absolute dream come true for thousands of us.\n\nWe are ready to fill the cinemas! Thank you for making such an incredible show, and please consider an Italian theatrical release.\n\nBest regards,\nAn Italian fan`,
+    
+    "3": `To the respective Distribution Teams,\n\nI am reaching out as an enthusiastic Italian supporter of the hit series The Amazing Digital Circus.\n\nI strongly believe there is a massive market opportunity for a theatrical release of this title in Italy. The Italian audience has a deep appreciation for innovative animation, and the community surrounding TADC is highly engaged.\n\nBringing this cinematic experience to our local theaters would undoubtedly be a huge success. We hope to see this brilliant universe on the big screen very soon.\n\nSincerely,\nA dedicated fan from Italy`
+  };
+
+  // Funzione che aggiorna l'anteprima e il link del bottone
+  function updateEmailContent() {
+    const selectedValue = document.querySelector('input[name="mailCopy"]:checked').value;
+    const rawText = emailTexts[selectedValue];
+    
+    // Aggiorna anteprima (sostituisce \n con <br> per l'HTML)
+    document.getElementById('msgBodyPreview').innerHTML = rawText.replace(/\n/g, '<br>');
+    
+    // Aggiorna il bottone
+    const body = encodeURIComponent(rawText);
+    document.getElementById('mailtoBtn').href = `mailto:?bcc=${bcc}&subject=${subj}&body=${body}`;
+  }
+
+  // Ascolta i click sui radio button
+  const radioButtons = document.querySelectorAll('input[name="mailCopy"]');
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', updateEmailContent);
+  });
+
+  // Esegui la prima volta per caricare il testo di default
+  updateEmailContent();
 
   // Counter
   const base = 1247;
