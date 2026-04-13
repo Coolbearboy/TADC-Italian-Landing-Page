@@ -266,6 +266,48 @@
     line-height: 1.6;
   }
 
+  /* Stili per la box della petizione */
+  .petition-box {
+    background: rgba(255, 210, 0, 0.05);
+    border: 1px solid rgba(255, 210, 0, 0.25);
+    border-radius: 14px;
+    padding: 1.8rem 1.6rem;
+    margin: 4rem 0 2rem;
+    text-align: left;
+  }
+
+  .petition-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+
+  .petition-text {
+    font-size: .9rem;
+    color: #d0d0e0;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .petition-btn {
+    display: inline-block;
+    background: transparent;
+    color: var(--yellow);
+    font-weight: 500;
+    border: 1px solid var(--yellow);
+    padding: .7rem 1.6rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+
+  .petition-btn:hover {
+    background: var(--yellow);
+    color: #000;
+  }
+
   .divider {
     border: none;
     border-top: 1px solid rgba(255,255,255,.07);
@@ -292,6 +334,8 @@
   .fade-up:nth-child(8) { animation-delay: .8s; }
   .fade-up:nth-child(9) { animation-delay: .9s; }
   .fade-up:nth-child(10) { animation-delay: 1s; }
+  .fade-up:nth-child(11) { animation-delay: 1.1s; }
+  .fade-up:nth-child(12) { animation-delay: 1.2s; }
 </style>
 </head>
 <body>
@@ -358,7 +402,17 @@
   </div>
   <p class="fine fade-up">Cliccando si aprirà il tuo client email con tutti gli studi in CCN.<br>Non raccogliamo né condividiamo nessun dato.</p>
   
-  <p class="fine fade-up" style="margin-top: 2.5rem;">
+  <div class="petition-box fade-up">
+    <h2 class="petition-title">Firma anche la Petizione!</h2>
+    <p class="petition-text">
+      Da poco è uscito il trailer di <strong>“The Amazing Digital Circus: The Last Act”</strong>. È l’atto finale di una serie iniziata su YouTube nel 2023, che in pochissimo tempo ha conquistato tutti: ad oggi il solo Pilot conta oltre 440 milioni di views!<br><br>
+      Glitch Productions ha annunciato che gli ultimi due episodi usciranno al cinema, ma al momento la proiezione è confermata solo in Nord/Sud America e Giappone. Tuttavia, Glitch ci ha fatto sapere che <strong>se convinciamo i nostri cinema a proiettarlo, abbiamo una reale possibilità.</strong><br><br>
+      Vi invito a firmare questa petizione per mostrare il nostro desiderio collettivo di vedere <em>The Last Act</em> nei cinema italiani. Insieme, possiamo fare la differenza.
+    </p>
+    <a href="https://www.change.org/p/portare-the-amazing-digital-circus-the-last-act-in-italia?redirect_reason=guest_user" target="_blank" rel="noopener noreferrer" class="petition-btn">Firma la petizione su Change.org</a>
+  </div>
+  
+  <p class="fine fade-up" style="margin-top: 1rem;">
     made, with the help of AI, by <a href="https://www.instagram.com/coolbearboy/" target="_blank" rel="noopener noreferrer" style="color: var(--blue); text-decoration: none;">@coolbearboy</a>
   </p>
 </main>
@@ -371,6 +425,10 @@
     { name: "Sony Pictures", email: "socialmedia@spe.sony.com" },
     { name: "Netflix Film", email: "pr@netflix.com" },
     { name: "Amazon MGM", email: "amazonstudios@amazon.com" },
+    { name: "Lucky Red", email: "info@luckyred.it" },
+    { name: "Nexo Digital", email: "info@nexodigital.it" },
+    { name: "Notorious", email: "info@notoriouspictures.it" },
+    { name: "Videa", email: "info@videa.it" }
   ];
 
   const list = document.getElementById('studioList');
