@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Amazing Digital Circus — Vogliamo vederlo in Italia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #FF3E6C;
+    --yellow: #FFD200;
+    --blue: #00C2FF;
+    --purple: #7B2FFF;
+    --green-it: #009246;
+    --red-it: #ce2b37;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #0a0a0f;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  canvas#bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: 'Bebas Neue', cursive;
+    font-size: .95rem;
+    letter-spacing: 4px;
+    color: var(--purple);
+    margin-bottom: .6rem;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 10vw, 6rem);
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    text-shadow: 4px 4px 0 var(--red);
+    margin-bottom: 1.25rem;
+  }
+
+  .italy-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 146, 70, .15);
+    border: 1px solid rgba(0, 146, 70, .5);
+    border-radius: 10px;
+    padding: .55rem 1.3rem;
+    font-size: .95rem;
+    color: #4ade80;
+    font-weight: 500;
+    margin-bottom: 1.75rem;
+  }
+
+  .flag {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .flag span {
+    display: inline-block;
+    width: 10px;
+    height: 16px;
+    border-radius: 2px;
+  }
+
+  .sub {
+    font-size: 1.05rem;
+    color: #b0b0c8;
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+  }
+
+  .counter-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 999px;
+    padding: .4rem 1.2rem;
+    font-size: .85rem;
+    color: #b0b0c8;
+    margin-bottom: 2.25rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+  }
+
+  .section-label {
+    font-size: .72rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: .75rem;
+  }
+
+  .studios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .studio-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(123, 47, 255, .18);
+    border: 1px solid rgba(123, 47, 255, .45);
+    border-radius: 10px;
+    padding: .45rem 1rem;
+    font-size: .85rem;
+    color: #d4c4ff;
+  }
+
+  .badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    background: rgba(123, 47, 255, .35);
+    color: #c9a8ff;
+  }
+
+  .msg-preview {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 2.5rem;
+    text-align: left;
+  }
+
+  .msg-label {
+    font-size: .7rem;
+    font-weight: 500;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: .65rem;
+  }
+
+  .msg-meta {
+    font-size: .8rem;
+    color: #666;
+    margin-bottom: .3rem;
+  }
+
+  .msg-meta span { color: #c0c0d8; }
+
+  .msg-text {
+    font-size: .875rem;
+    color: #c0c0d8;
+    line-height: 1.75;
+    margin-top: .75rem;
+  }
+
+  .highlight { color: var(--yellow); font-weight: 500; }
+
+  .cta-wrap { margin-bottom: .75rem; }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    padding: .9rem 2.8rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 4px 28px rgba(255, 62, 108, .45);
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 36px rgba(255, 62, 108, .6);
+  }
+
+  .cta-btn:active { transform: translateY(0); }
+
+  .fine {
+    font-size: .75rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,.07);
+    margin: 2.5rem 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp .6s ease forwards;
+  }
+
+  .fade-up:nth-child(1) { animation-delay: .1s; }
+  .fade-up:nth-child(2) { animation-delay: .2s; }
+  .fade-up:nth-child(3) { animation-delay: .3s; }
+  .fade-up:nth-child(4) { animation-delay: .4s; }
+  .fade-up:nth-child(5) { animation-delay: .5s; }
+  .fade-up:nth-child(6) { animation-delay: .6s; }
+  .fade-up:nth-child(7) { animation-delay: .7s; }
+  .fade-up:nth-child(8) { animation-delay: .8s; }
+  .fade-up:nth-child(9) { animation-delay: .9s; }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<main>
+  <p class="eyebrow fade-up">Campagna Fan</p>
+
+  <h1 class="fade-up">The Amazing<br>Digital Circus</h1>
+
+  <div class="fade-up">
+    <div class="italy-banner">
+      <div class="flag">
+        <span style="background:#009246"></span>
+        <span style="background:#fff"></span>
+        <span style="background:#ce2b37"></span>
+      </div>
+      Vogliamo vederlo nei cinema italiani
+    </div>
+  </div>
+
+  <p class="sub fade-up">
+    Siamo fan italiani di <strong style="color:#fff">The Amazing Digital Circus</strong> e vogliamo che questo capolavoro animato venga distribuito nelle sale cinematografiche italiane.<br>
+    Unisciti a noi: in un solo click invii una mail a tutti i grandi studi. Nessuna registrazione richiesta.
+  </p>
+
+  <div class="counter-box fade-up">
+    <span class="dot"></span>
+    <span id="counter">1.247</span>&nbsp;fan italiani hanno già scritto oggi
+  </div>
+
+  <hr class="divider">
+
+  <p class="section-label fade-up">Mail inviata a tutti questi studi in CCN</p>
+  <div class="studios fade-up" id="studioList"></div>
+
+  <div class="msg-preview fade-up">
+    <div class="msg-label">Anteprima email</div>
+    <p class="msg-meta">A: <span>te stesso (studi in CCN)</span></p>
+    <p class="msg-meta">Oggetto: <span>Please Release The Amazing Digital Circus in Italian Cinemas</span></p>
+    <div class="msg-text">
+      Dear Team,<br><br>
+      I am an Italian fan of <em>The Amazing Digital Circus</em>, the acclaimed animated series by Gooseworx and Glitch Productions.<br><br>
+      I am writing to make a specific and heartfelt request: <span class="highlight">please release The Amazing Digital Circus as a theatrical feature film in Italy.</span> The Italian fanbase is passionate, large, and ready — we want to experience this world on the big screen, in our cinemas, in our country.<br><br>
+      Italy has a strong tradition of animation appreciation and a dedicated audience for this kind of bold, original storytelling. A theatrical release in Italy would be met with enormous enthusiasm.<br><br>
+      Please consider bringing this incredible show to Italian cinemas. You already have our full support.<br><br>
+      Thank you for your consideration.<br>
+      An Italian fan
+    </div>
+  </div>
+
+  <div class="cta-wrap fade-up">
+    <a id="mailtoBtn" class="cta-btn" href="#">Invia la mail ora</a>
+  </div>
+  <p class="fine fade-up">Cliccando si aprirà il tuo client email con tutti gli studi in CCN.<br>Non raccogliamo né condividiamo nessun dato.</p>
+  
+  <p class="fine fade-up" style="margin-top: 2.5rem;">
+    made, with the help of AI, by <a href="https://www.instagram.com/coolbearboy/" target="_blank" rel="noopener noreferrer" style="color: var(--blue); text-decoration: none;">@coolbearboy</a>
+  </p>
+</main>
+
+<script>
+  const studios = [
+    { name: "Universal Pictures", email: "info@nbcuni.com" },
+    { name: "Warner Bros.", email: "wbconsumerrelations@warnerbros.com" },
+    { name: "A24", email: "hello@a24films.com" },
+    { name: "Sony Pictures", email: "socialmedia@spe.sony.com" },
+    { name: "Netflix Film", email: "pr@netflix.com" },
+    { name: "Amazon MGM", email: "amazonstudios@amazon.com" },
+  ];
+
+  const list = document.getElementById('studioList');
+  studios.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'studio-chip';
+    chip.innerHTML = `<span class="badge">${s.name.charAt(0)}</span>${s.name}`;
+    list.appendChild(chip);
+  });
+
+  const bcc = studios.map(s => s.email).join(',');
+  const subj = encodeURIComponent('Please Release The Amazing Digital Circus in Italian Cinemas');
+  const body = encodeURIComponent(
+    `Dear Team,\n\nI am an Italian fan of The Amazing Digital Circus, the acclaimed animated series by Gooseworx and Glitch Productions.\n\nI am writing to make a specific and heartfelt request: please release The Amazing Digital Circus as a theatrical feature film in Italy. The Italian fanbase is passionate, large, and ready — we want to experience this world on the big screen, in our cinemas, in our country.\n\nItaly has a strong tradition of animation appreciation and a dedicated audience for this kind of bold, original storytelling. A theatrical release in Italy would be met with enormous enthusiasm.\n\nPlease consider bringing this incredible show to Italian cinemas. You already have our full support.\n\nThank you for your consideration.\nAn Italian fan`
+  );
+
+  document.getElementById('mailtoBtn').href = `mailto:?bcc=${bcc}&subject=${subj}&body=${body}`;
+
+  // Counter
+  const base = 1247;
+  const extra = Math.floor(Date.now() / 60000) % 50;
+  document.getElementById('counter').textContent = (base + extra).toLocaleString('it-IT');
+
+  // Starfield
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: 120 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      o: Math.random() * Math.PI * 2,
+      sp: Math.random() * 0.008 + 0.006
+    }));
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.o += s.sp;
+      ctx.globalAlpha = 0.15 + 0.55 * Math.abs(Math.sin(s.o));
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>
