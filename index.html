@@ -373,7 +373,7 @@
   <p class="section-label fade-up">Scegli il messaggio da inviare</p>
   <div class="copy-selector fade-up">
     <label class="radio-label">
-      <input type="radio" name="mailCopy" value="1" checked>
+      <input type="radio" name="mailCopy" value="1">
       <span>1. Appassionato</span>
     </label>
     <label class="radio-label">
@@ -383,6 +383,22 @@
     <label class="radio-label">
       <input type="radio" name="mailCopy" value="3">
       <span>3. Formale e Analitico</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="4">
+      <span>4. Emozionale e Personale</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="5">
+      <span>5. Creativo e Giocoso</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="6">
+      <span>6. Appassionato (IT)</span>
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="mailCopy" value="7">
+      <span>7. Formale (IT)</span>
     </label>
   </div>
 
@@ -420,7 +436,7 @@
 <script>
   const studios = [
     { name: "Universal Pictures", email: "info@nbcuni.com" },
-    { name: "Warner Bros.", email: "infoitalia@wbitvp.it" },
+    { name: "Warner Bros.", email: "info@warnerbros.com" },
     { name: "A24", email: "hello@a24films.com" },
     { name: "Sony Pictures", email: "socialmedia@spe.sony.com" },
     { name: "Netflix Film", email: "pr@netflix.com" },
@@ -428,7 +444,7 @@
     { name: "Lucky Red", email: "info@luckyred.it" },
     { name: "Nexo Digital", email: "info@nexodigital.it" },
     { name: "Notorious", email: "info@notoriouspictures.it" },
-    { name: "Videa", email: "info@videaspa.it" }
+    { name: "Videa", email: "info@videa.it" }
   ];
 
   const list = document.getElementById('studioList');
@@ -441,7 +457,7 @@
 
   const bcc = studios.map(s => s.email).join(',');
 
-  // I 3 set di messaggi (Oggetto + Corpo)
+  // I 7 set di messaggi (Oggetto + Corpo)
   const emailTexts = {
     "1": {
       subject: "Please Release The Amazing Digital Circus in Italian Cinemas",
@@ -454,12 +470,30 @@
     "3": {
       subject: "Inquiry regarding Italian theatrical release for TADC",
       body: `To the respective Distribution Teams,\n\nI am reaching out as an enthusiastic Italian supporter of the hit series The Amazing Digital Circus.\n\nI strongly believe there is a massive market opportunity for a theatrical release of this title in Italy. The Italian audience has a deep appreciation for innovative animation, and the community surrounding TADC is highly engaged.\n\nBringing this cinematic experience to our local theaters would undoubtedly be a huge success. We hope to see this brilliant universe on the big screen very soon.\n\nSincerely,\nA dedicated fan from Italy`
+    },
+    "4": {
+      subject: "A sincere request from an Italian fan of The Amazing Digital Circus",
+      body: `Dear Team,\n\nI am writing to you today not just as a viewer, but as someone deeply touched by the incredible world of The Amazing Digital Circus. The creativity and heart poured into this series have created a truly special community here in Italy.\n\nSeeing "The Last Act" in a local cinema alongside other fans would be an unforgettable experience for us. We want to laugh, gasp, and cry together in front of the big screen.\n\nPlease help us make this dream a reality by distributing the film in Italian theaters. We will be there waiting!\n\nWith gratitude,\nAn Italian fan`
+    },
+    "5": {
+      subject: "Step right up! Please bring The Amazing Digital Circus to Italy 🎪",
+      body: `Greetings to the Distribution Team!\n\nThe Amazing Digital Circus has captured our screens and our hearts, but now we need it to capture our cinemas! As an Italian fan, I am eagerly awaiting the grand finale, and watching it on a smartphone or monitor just won't do justice to such a spectacular show.\n\nWe are ready to buy our tickets and put on our best smiles to enjoy the wild ride of "The Last Act" on the big screen. We just need you to bring the circus to our town!\n\nThank you for your hard work, and please consider an Italian release.\n\nCheers,\nAn Italian fan`
+    },
+    "6": {
+      subject: "Portate The Amazing Digital Circus nei cinema italiani! 🎪",
+      body: `Gentile Team di Distribuzione,\n\nScrivo come fan italiano sfegatato di The Amazing Digital Circus. La community italiana di questa serie è immensa e super attiva!\n\nSarebbe un sogno poter vivere l'esperienza degli ultimi due episodi, "The Last Act", sul grande schermo dei nostri cinema. C'è un pubblico enorme pronto a riempire le sale per questo capolavoro di Gooseworx e Glitch Productions.\n\nVi prego di prendere in considerazione la distribuzione nei cinema italiani. Avete tutto il nostro supporto e i nostri biglietti sono già pronti!\n\nUn fan italiano`
+    },
+    "7": {
+      subject: "Proposta di distribuzione cinematografica: The Amazing Digital Circus",
+      body: `Alla cortese attenzione del team di distribuzione,\n\nVi contatto per segnalare l'enorme potenziale di mercato relativo alla serie animata "The Amazing Digital Circus". Il recente annuncio di proiezioni cinematografiche per il finale di stagione in altre nazioni ha suscitato grande interesse e forte richiesta anche nel nostro Paese.\n\nIl pubblico italiano appassionato di animazione d'autore è vasto e garantisce un ritorno sicuro per eventi di questo tipo al cinema. Distribuire "The Last Act" in Italia rappresenterebbe un'ottima opportunità commerciale e un grande traguardo per la community.\n\nSperando in un vostro riscontro positivo, porgo cordiali saluti.\n\nUn sostenitore italiano`
     }
   };
 
   function updateEmailContent() {
-    const selectedValue = document.querySelector('input[name="mailCopy"]:checked').value;
-    const content = emailTexts[selectedValue];
+    const selectedRadio = document.querySelector('input[name="mailCopy"]:checked');
+    if (!selectedRadio) return; 
+
+    const content = emailTexts[selectedRadio.value];
     
     // Aggiorna anteprima Oggetto e Corpo
     document.getElementById('msgSubjectPreview').textContent = content.subject;
@@ -471,11 +505,20 @@
     document.getElementById('mailtoBtn').href = `mailto:?bcc=${bcc}&subject=${subjectEncoded}&body=${bodyEncoded}`;
   }
 
+  // --- SELEZIONE CASUALE AL CARICAMENTO ---
+  // Estrae un numero casuale da 1 a 7
+  const randomTone = Math.floor(Math.random() * 7) + 1;
+  // Seleziona il radio button corrispondente
+  document.querySelector(`input[name="mailCopy"][value="${randomTone}"]`).checked = true;
+  // ------------------------------------------
+
+  // Ascolta i cambiamenti per quando l'utente clicca manualmente
   const radioButtons = document.querySelectorAll('input[name="mailCopy"]');
   radioButtons.forEach(radio => {
     radio.addEventListener('change', updateEmailContent);
   });
 
+  // Aggiorna l'anteprima in base alla scelta casuale iniziale
   updateEmailContent();
 
   // Counter
